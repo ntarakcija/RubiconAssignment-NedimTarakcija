@@ -5,6 +5,12 @@ public class Movie {
     private String overview;
     private String poster;
 
+    Movie(String title, String overview, String poster) {
+        this.title = title;
+        this.overview = overview;
+        this.poster = poster;
+    }
+
     public String getTitle() {
         return title;
     }

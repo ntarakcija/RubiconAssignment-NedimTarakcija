@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,8 +26,9 @@ public class FragmentMovies extends Fragment implements IFetch {
         FetchResultReceiver receiver = new FetchResultReceiver(new Handler());
         receiver.setReceiver(FragmentMovies.this);
 
-        Intent intent = new Intent(getActivity(), FetchMovies.class);
+        Intent intent = new Intent(getActivity(), FetchData.class);
         intent.putExtra("receiver", receiver);
+        intent.putExtra("type", "movies");
         getActivity().startService(intent);
 
         moviesList = v.findViewById(R.id.lvMovies);
@@ -37,17 +39,17 @@ public class FragmentMovies extends Fragment implements IFetch {
     @Override
     public void processReceivedData(int resultCode, Bundle resultData) {
         switch (resultCode) {
-            case 1:
-                Toast.makeText(getContext(), "Service started.", Toast.LENGTH_SHORT).show();
-            case 2:
-                Toast.makeText(getContext(), resultData.getString("string"), Toast.LENGTH_SHORT).show();
-
+            case FetchData.SERVICE_STARTED:
+            case FetchData.SERVICE_FINISHED:
+                if(resultData != Bundle.EMPTY) {
+                    updateMovies((ArrayList<Movie>) resultData.getSerializable("movies"));
+                }
             default:
-
         }
     }
 
-    public void updateMovies(ArrayList<String> movies) {
-
+    public void updateMovies(ArrayList<Movie> movies) {
+        MovieAdapter adapter = new MovieAdapter(getContext(), R.layout.movie_row, movies);
+        moviesList.setAdapter(adapter);
     }
 }
