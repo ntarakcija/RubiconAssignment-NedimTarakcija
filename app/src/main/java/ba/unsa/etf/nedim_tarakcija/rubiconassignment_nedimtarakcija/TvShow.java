@@ -1,6 +1,8 @@
 package ba.unsa.etf.nedim_tarakcija.rubiconassignment_nedimtarakcija;
 
-public class TvShow {
+import java.io.Serializable;
+
+public class TvShow implements Serializable {
     private String title;
     private String overview;
     private String poster;

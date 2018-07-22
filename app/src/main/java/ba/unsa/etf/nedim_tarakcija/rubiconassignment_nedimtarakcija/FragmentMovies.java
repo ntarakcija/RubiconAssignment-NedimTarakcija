@@ -1,24 +1,23 @@
 package ba.unsa.etf.nedim_tarakcija.rubiconassignment_nedimtarakcija;
 
-import android.app.IntentService;
-import android.content.Context;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class FragmentMovies extends Fragment implements IFetch {
+public class FragmentMovies extends android.support.v4.app.Fragment implements IFetch {
     private ListView moviesList;
+    private ArrayList<Movie> movies;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,6 +31,22 @@ public class FragmentMovies extends Fragment implements IFetch {
         getActivity().startService(intent);
 
         moviesList = v.findViewById(R.id.lvMovies);
+        moviesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                android.support.v4.app.Fragment f = new FragmentMovieDetails();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("movie", movies.get(position));
+                f.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment, (android.support.v4.app.Fragment) f);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
         return v;
     }
@@ -42,7 +57,7 @@ public class FragmentMovies extends Fragment implements IFetch {
             case FetchMovies.SERVICE_STARTED:
             case FetchMovies.SERVICE_FINISHED:
                 if(resultData != Bundle.EMPTY) {
-                    ArrayList<Movie> movies = (ArrayList<Movie>) resultData.getSerializable("movies");
+                    movies = (ArrayList<Movie>) resultData.getSerializable("movies");
                     MovieAdapter adapter = new MovieAdapter(getContext(), R.layout.movie_row, movies);
                     moviesList.setAdapter(adapter);
                 }

@@ -40,7 +40,7 @@ public class MovieAdapter extends ArrayAdapter<Movie> {
 
         Movie movie = getItem(position);
         title.setText(movie.getTitle());
-        Picasso.get().load(movie.getPoster()).into(poster);
+        //Picasso.get().load(movie.getPoster()).into(poster);
         Picasso.get().load(movie.getPoster()).transform(new CropCircleTransformation()).into(poster);
 
         return  v;

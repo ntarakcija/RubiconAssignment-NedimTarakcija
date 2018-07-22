@@ -9,12 +9,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 public class FragmentTvShows extends Fragment implements IFetch {
     private ListView showsList;
+    private ArrayList<TvShow> shows;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,6 +31,22 @@ public class FragmentTvShows extends Fragment implements IFetch {
         getActivity().startService(intent);
 
         showsList = v.findViewById(R.id.lvShows);
+        showsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                android.support.v4.app.Fragment f = new FragmentTvShowDetails();
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("show", shows.get(position));
+                f.setArguments(bundle);
+
+                fragmentTransaction.replace(R.id.fragment, (android.support.v4.app.Fragment) f);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
 
         return v;
     }
@@ -39,8 +57,8 @@ public class FragmentTvShows extends Fragment implements IFetch {
             case FetchMovies.SERVICE_STARTED:
             case FetchMovies.SERVICE_FINISHED:
                 if(resultData != Bundle.EMPTY) {
-                    ArrayList<TvShow> movies = (ArrayList<TvShow>) resultData.getSerializable("movies");
-                    TvShowAdapter adapter = new TvShowAdapter(getContext(), R.layout.tvshow_row, movies);
+                    shows = (ArrayList<TvShow>) resultData.getSerializable("movies");
+                    TvShowAdapter adapter = new TvShowAdapter(getContext(), R.layout.tvshow_row, shows);
                     showsList.setAdapter(adapter);
                 }
             default:

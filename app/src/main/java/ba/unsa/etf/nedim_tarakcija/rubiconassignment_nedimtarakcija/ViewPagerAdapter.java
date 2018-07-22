@@ -1,6 +1,5 @@
 package ba.unsa.etf.nedim_tarakcija.rubiconassignment_nedimtarakcija;
 
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
