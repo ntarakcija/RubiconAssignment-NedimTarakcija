@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +24,11 @@ public class FragmentMovies extends Fragment implements IFetch {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_movies, container, false);
 
-        FetchResultReceiver receiver = new FetchResultReceiver(new Handler());
+        MovieResultReceiver receiver = new MovieResultReceiver(new Handler());
         receiver.setReceiver(FragmentMovies.this);
 
-        Intent intent = new Intent(getActivity(), FetchData.class);
+        Intent intent = new Intent(getActivity(), FetchMovies.class);
         intent.putExtra("receiver", receiver);
-        intent.putExtra("type", "movies");
         getActivity().startService(intent);
 
         moviesList = v.findViewById(R.id.lvMovies);
@@ -37,19 +37,16 @@ public class FragmentMovies extends Fragment implements IFetch {
     }
 
     @Override
-    public void processReceivedData(int resultCode, Bundle resultData) {
+    public void processData(int resultCode, Bundle resultData) {
         switch (resultCode) {
-            case FetchData.SERVICE_STARTED:
-            case FetchData.SERVICE_FINISHED:
+            case FetchMovies.SERVICE_STARTED:
+            case FetchMovies.SERVICE_FINISHED:
                 if(resultData != Bundle.EMPTY) {
-                    updateMovies((ArrayList<Movie>) resultData.getSerializable("movies"));
+                    ArrayList<Movie> movies = (ArrayList<Movie>) resultData.getSerializable("movies");
+                    MovieAdapter adapter = new MovieAdapter(getContext(), R.layout.movie_row, movies);
+                    moviesList.setAdapter(adapter);
                 }
             default:
         }
-    }
-
-    public void updateMovies(ArrayList<Movie> movies) {
-        MovieAdapter adapter = new MovieAdapter(getContext(), R.layout.movie_row, movies);
-        moviesList.setAdapter(adapter);
     }
 }
