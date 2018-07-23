@@ -4,7 +4,7 @@ INSTALLATION
 
 - The app can be installed using Installation.apk file located in the folder.
 
-- The app can be tested on online emulator: https://appetize.io/
+- The app can be tested on online emulator: https://appetize.io/ </br>
   Installed app link: https://appetize.io/app/r3qvde4brne6d37ewuk1g9mma0?device=nexus5&scale=75&orientation=portrait&osVersion=7.1
 
 
