@@ -1,5 +1,13 @@
 # RubiconAssignment-NedimTarakcija
 
+INSTALLATION
+
+- The app can be installed using Installation.apk file located in the folder.
+
+- The app can be tested on online emulator:
+https://appetize.io/app/971u64eckcnv1u6w2tqd26zxd0?device=nexus5&scale=75&orientation=portrait&osVersion=7.1
+
+
 NOTES
 
 - Number of item that appears when searching is set to maximum of 20 items (only first page of results).
