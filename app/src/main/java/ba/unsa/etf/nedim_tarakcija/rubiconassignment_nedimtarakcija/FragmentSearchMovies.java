@@ -11,38 +11,41 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class FragmentTvShows extends Fragment implements IFetch {
-    private ListView showsList;
-    private ArrayList<TvShow> shows;
+public class FragmentSearchMovies extends android.support.v4.app.Fragment implements IFetch {
+    private ListView moviesList;
+    private ArrayList<Movie> movies;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_tv_shows, container, false);
+        View v = inflater.inflate(R.layout.fragment_search_movies, container, false);
+        Bundle bundle = getArguments();
 
-        TvShowResultReceiver receiver = new TvShowResultReceiver(new Handler());
-        receiver.setReceiver(FragmentTvShows.this);
+        SearchMoviesResultReceiver receiver = new SearchMoviesResultReceiver(new Handler());
+        receiver.setReceiver(FragmentSearchMovies.this);
 
-        Intent intent = new Intent(getActivity(), FetchTvShows.class);
+        Intent intent = new Intent(getActivity(), SearchMovies.class);
         intent.putExtra("receiver", receiver);
+        intent.putExtra("query", bundle.getString("query"));
         getActivity().startService(intent);
 
-        showsList = v.findViewById(R.id.lvShows);
+        moviesList = v.findViewById(R.id.lvMoviesSearch);
 
-        showsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        moviesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 android.support.v4.app.FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
                 android.support.v4.app.FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-                android.support.v4.app.Fragment f = new FragmentTvShowDetails();
+                android.support.v4.app.Fragment f = new FragmentMovieDetails();
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("show", shows.get(position));
+                bundle.putSerializable("movie", movies.get(position));
                 f.setArguments(bundle);
 
-                fragmentTransaction.replace(R.id.fragment, (android.support.v4.app.Fragment) f);
+                fragmentTransaction.replace(R.id.fragment, f);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -57,9 +60,11 @@ public class FragmentTvShows extends Fragment implements IFetch {
             case FetchMovies.SERVICE_STARTED:
             case FetchMovies.SERVICE_FINISHED:
                 if(resultData != Bundle.EMPTY) {
-                    shows = (ArrayList<TvShow>) resultData.getSerializable("movies");
-                    TvShowAdapter adapter = new TvShowAdapter(getContext(), R.layout.tvshow_row, shows);
-                    showsList.setAdapter(adapter);
+                    if(getContext() != null) {
+                        movies = (ArrayList<Movie>) resultData.getSerializable("movies");
+                        MovieAdapter adapter = new MovieAdapter(getContext(), R.layout.movie_row, movies);
+                        moviesList.setAdapter(adapter);
+                    }
                 }
             default:
         }

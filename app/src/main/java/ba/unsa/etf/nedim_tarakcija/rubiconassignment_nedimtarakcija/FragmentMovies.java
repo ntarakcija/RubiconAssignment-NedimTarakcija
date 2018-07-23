@@ -31,6 +31,7 @@ public class FragmentMovies extends android.support.v4.app.Fragment implements I
         getActivity().startService(intent);
 
         moviesList = v.findViewById(R.id.lvMovies);
+
         moviesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -42,7 +43,7 @@ public class FragmentMovies extends android.support.v4.app.Fragment implements I
                 bundle.putSerializable("movie", movies.get(position));
                 f.setArguments(bundle);
 
-                fragmentTransaction.replace(R.id.fragment, (android.support.v4.app.Fragment) f);
+                fragmentTransaction.replace(R.id.fragment, f);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }

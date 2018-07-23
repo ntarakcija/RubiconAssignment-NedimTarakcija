@@ -22,6 +22,8 @@
 
         <service android:name=".FetchMovies" android:enabled="true" />
         <service android:name=".FetchTvShows" android:enabled="true" />
+        <service android:name=".SearchMovies" android:enabled="true"/>
+        <service android:name=".SearchTvShows" android:enabled="true"/>
     </application>
 
 
