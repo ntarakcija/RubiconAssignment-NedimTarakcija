@@ -2,9 +2,9 @@
 
 NOTES
 
-- Number of item that appears when searching is set to maximum of 20 items (only first page of results)
+- Number of item that appears when searching is set to maximum of 20 items (only first page of results).
 
-- Movie class and TvShow class could be one class because they currently contain same data but it's better to use two different classes so it's easier to make changes in the future
+- Movie class and TvShow class could be one class because they currently contain same data but it's better to use two different classes so it's easier to make changes in the future.
 
 
 POSSIBLE OPTIMIZATIONS
